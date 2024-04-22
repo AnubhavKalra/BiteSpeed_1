@@ -3,8 +3,10 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Enum
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+import os
 
 app = Flask(__name__)
+# Configure the database URI
 engine = create_engine('sqlite:///contacts.db')
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
@@ -59,7 +61,7 @@ def identify_contact():
 
     response = {
         "contact": {
-            "primaryContatctId": primary_contact_id,
+            "primaryContactId": primary_contact_id,
             "emails": emails,
             "phoneNumbers": phone_numbers,
             "secondaryContactIds": secondary_contact_ids
@@ -70,4 +72,5 @@ def identify_contact():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 10000))  # Use PORT environment variable if available, otherwise default to 10000
+    app.run(host='0.0.0.0', port=port)
